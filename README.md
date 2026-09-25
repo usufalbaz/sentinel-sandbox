@@ -35,24 +35,24 @@ A dangerous and repeatable attack vector currently targets software engineers gl
 
 ```
 [Target GitHub Repository URL]
-               │
-               ▼
+               |
+               v
    [Disposable Sandbox Engine]
    (Ephemeral Containerized Isolation)
-               │
+               |
        (Runtime Hooks & Telemetry)
-               │
-               ▼
+               |
+               v
 [IBM Bob 2.0 Agentic Reasoning Engine]
    ├── Subagent 1: Process & Lifecycle Monitor
    ├── Subagent 2: Network & Socket Call Tracker
    └── Subagent 3: File System & Credential Watcher
-               │
-               ▼
+               |
+               v
    [Deterministic Verdict Engine]
    (MALICIOUS 🚨 / SUSPICIOUS ⚠️ / CLEAN ✅)
-               │
-               ▼
+               |
+               v
  [Interactive Dashboard & Live Report]
  (Next.js Frontend + Auto-Remediation)
 ```
@@ -84,17 +84,16 @@ A dangerous and repeatable attack vector currently targets software engineers gl
 ```
 sentinel-sandbox/
 ├── backend/
-│   ├── app/
-│   │   ├── api/          # REST API endpoints
-│   │   ├── core/         # Security engine & agent orchestration
-│   │   ├── sandbox/      # Container execution & instrumentation
-│   │   └── main.py       # FastAPI application entrypoint
+│   ├── api/          # REST API endpoints
+│   ├── agent/        # Bob 2.0 integration + rule engine
+│   ├── sandbox/      # Docker runner + activity monitor
+│   ├── main.py       # FastAPI application entrypoint
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── components/   # UI widgets & interactive terminal
-│   │   ├── pages/        # Next.js route handlers
-│   │   └── styles/       # Tailwind & theme configurations
+│   │   ├── app/          # Next.js App Router (layout, page)
+│   │   ├── components/   # ScanForm, VerdictPanel, FindingsFeed, FollowUpChat
+│   │   └── lib/          # types.ts, api.ts
 │   └── package.json
 ├── ibm-bob-evidence/     # Task session verification screenshots
 ├── LICENSE
@@ -103,7 +102,31 @@ sentinel-sandbox/
 
 ---
 
-## 7. Team Jinx Security AI
+## 7. Quick Start
+
+### Backend
+```bash
+cd backend
+python -m venv .venv && .venv/Scripts/activate   # Windows
+pip install -r requirements.txt
+cp .env.example .env                              # add BOB_API_KEY + BOB_PROJECT_ID
+uvicorn main:app --reload
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+cp .env.local.example .env.local                 # set NEXT_PUBLIC_API_URL
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+API runs on [http://localhost:8000](http://localhost:8000).
+
+---
+
+## 8. Team Jinx Security AI
 
 - **Yousuf El-Baz (Mr. G):** Team Lead, Architecture Coordination & Presentation Lead
 - **Eman Mirza:** Full-Stack Lead, Frontend Architecture & Agent Workflow
@@ -114,6 +137,6 @@ sentinel-sandbox/
 
 ---
 
-## 8. License
+## 9. License
 
 This project is open-source and distributed under the **MIT License**. See the `LICENSE` file for details.
