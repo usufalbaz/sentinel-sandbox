@@ -8,7 +8,7 @@
 
 ---
 
-## 1. Problem Statement: The Fake Technical Assessment Trap
+## 1. Problem Statement: The Fake Technical Assessment Trap 
 
 A dangerous and repeatable attack vector currently targets software engineers globally:
 1. Threat actors pose as tech recruiters on platforms like LinkedIn and GitHub, offering attractive developer roles.
