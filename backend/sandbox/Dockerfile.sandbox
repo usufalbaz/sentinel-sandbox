@@ -1,0 +1,23 @@
+FROM node:20-slim
+
+# ── system deps ────────────────────────────────────────────────────────────────
+RUN apt-get update -qq \
+    && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── non-root user ──────────────────────────────────────────────────────────────
+RUN groupadd -g 1001 sandbox \
+    && useradd -u 1001 -g sandbox -m -s /bin/bash sandbox
+
+WORKDIR /home/sandbox
+
+USER sandbox
+
+# REPO_URL is injected at docker run time via --env
+ENV REPO_URL=""
+
+# Entrypoint: clone REPO_URL then run npm install
+# Container is always launched with --rm and --network none by runner.py
+CMD git clone --depth 1 -- "${REPO_URL}" /home/sandbox/repo \
+    && cd /home/sandbox/repo \
+    && npm install --no-audit --no-fund

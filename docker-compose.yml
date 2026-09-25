@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - BOB_API_KEY=${BOB_API_KEY}
+      - BOB_PROJECT_ID=${BOB_PROJECT_ID}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - sentinel
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - sentinel
+
+  sandbox:
+    build:
+      context: ./backend/sandbox
+      dockerfile: Dockerfile.sandbox
+    profiles:
+      - sandbox   # only built; never started directly — launched per-scan by runner.py
+    network_mode: none
+
+networks:
+  sentinel:
+    driver: bridge
