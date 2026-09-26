@@ -200,6 +200,44 @@ class TestSecurityRuleEngine(unittest.TestCase):
 
         self.assertEqual(findings, [])
 
+    def test_sha256_is_not_flagged_as_weak_hash(self):
+        code = "hashed = hashlib.sha256(password.encode()).hexdigest()"
 
+        findings = self.engine.scan_code_lines(
+            code,
+            "secure_hash.py"
+        )
+
+        self.assertEqual(findings, [])
+
+    def test_safe_subprocess_without_popen_is_not_flagged(self):
+        code = "result = subprocess.run(['python', 'script.py'], check=True)"
+
+        findings = self.engine.scan_code_lines(
+            code,
+            "safe_process.py"
+        )
+
+        self.assertEqual(findings, [])
+
+    def test_package_with_non_lifecycle_scripts_is_safe(self):
+        manifest = """
+        {
+            "name": "safe-package",
+            "version": "1.0.0",
+            "scripts": {
+                "test": "pytest",
+                "build": "npm run compile",
+                "lint": "eslint ."
+            }
+        }
+        """
+
+        findings = self.engine.inspect_package_json(
+            manifest,
+            "package.json"
+        )
+
+        self.assertEqual(findings, [])
 if __name__ == "__main__":
     unittest.main()
