@@ -235,6 +235,7 @@ Scans `package.json` hooks, obfuscated scripts, and dependency patterns before a
 ```
 sentinel-sandbox/
 ├── backend/
+│   ├── cli.py                    # Developer Command-Line Auditor
 │   ├── agent/
 │   │   ├── bob_agent.py          # IBM Bob 2.0 integration & agentic orchestration
 │   │   └── security_rules.py     # Threat pattern rule engine
@@ -245,6 +246,7 @@ sentinel-sandbox/
 │   ├── app/scanner/
 │   │   └── runner.py             # Scan lifecycle orchestrator
 │   ├── core/
+│   │   ├── threat_intel.py       # Supply chain threat signatures & CVSS scoring
 │   │   ├── static_analyzer.py    # Pre-execution package.json analysis
 │   │   ├── security_adapter.py   # Finding normalizer & severity mapper
 │   │   └── store.py              # In-memory scan state store
@@ -310,6 +312,11 @@ uvicorn main:app --reload --port 8000
 
 API available at → `http://localhost:8000`  
 Swagger UI → `http://localhost:8000/docs`
+
+#### Standalone CLI Usage (Optional)
+```bash
+python cli.py --repo https://github.com/usufalbaz/mock-assessment-repo
+```
 
 ### 3. Frontend
 
