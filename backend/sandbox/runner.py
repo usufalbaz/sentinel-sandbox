@@ -5,6 +5,7 @@ import subprocess
 def run_in_sandbox(repo_url: str, scan_id: str) -> dict:
   container_name = f"sandbox-{scan_id[:8]}"
   events = []
+  sandbox_ran = False
   try:
     build_cmd = [
         "docker",
@@ -29,12 +30,22 @@ def run_in_sandbox(repo_url: str, scan_id: str) -> dict:
         "sentinel-sandbox-img",
     ]
     proc = subprocess.run(run_cmd, capture_output=True, text=True, timeout=120)
+    sandbox_ran = True
     if "curl" in proc.stderr or "wget" in proc.stderr:
       events.append(
           {"type": "network", "destination": "Remote script loader endpoint"}
       )
     if "pwned" in proc.stdout or "simulated_leak" in proc.stdout:
       events.append({"type": "filesystem", "path": "simulated_leak.txt"})
+  except FileNotFoundError:
+    # Docker isn't installed/available in this environment (e.g. a managed
+    # host without container-in-container support). This is an environment
+    # limitation, NOT a finding about the scanned repository - don't let it
+    # masquerade as suspicious activity.
+    events.append({
+        "type": "environment",
+        "detail": "Dynamic sandbox unavailable: Docker is not installed in this environment.",
+    })
   except Exception as e:
     events.append({"type": "process", "command": str(e)})
-  return {"scan_id": scan_id, "events": events}
+  return {"scan_id": scan_id, "events": events, "sandbox_ran": sandbox_ran}

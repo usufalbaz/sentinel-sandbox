@@ -7,6 +7,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, field_validator
 
+from agent.bob_agent import chat as bob_chat
 from services.scan_manager import scan_manager
 
 
@@ -207,15 +208,9 @@ async def chat_about_scan(scan_id: str, body: ChatRequest) -> ChatResponse:
         # Extract context from scan
         narrative = scan.get("narrative") or "No findings are available for this scan yet."
         verdict = scan.get("verdict") or {}
-        verdict_level = verdict.get("level", "UNKNOWN")
-        confidence = verdict.get("confidence", 0)
 
-        # Build context-aware reply
-        reply = (
-            f"Based on scan {scan_id} with verdict {verdict_level} "
-            f"(confidence: {confidence * 100:.0f}%): {narrative}. "
-            f"Your question: \"{body.message}\" — the findings above are what triggered this verdict."
-        )
+        # Ask Bob to answer, grounded in this scan's narrative/verdict
+        reply = bob_chat(body.message, narrative, verdict)
 
         return ChatResponse(reply=reply, scan_id=scan_id)
 

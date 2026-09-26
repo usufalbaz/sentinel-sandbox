@@ -34,6 +34,21 @@ def build_runtime_findings(raw_events: list[dict[str, Any]], stdout: str = "", s
                 "line": None,
                 "evidence": event.get("destination"),
             })
+        elif event_type == "environment":
+            findings.append({
+                "id": f"runtime-{index}",
+                "category": "environment",
+                "severity": "info",
+                "description": event.get(
+                    "detail",
+                    "Dynamic sandbox was unavailable in this environment; "
+                    "verdict is based on static analysis only.",
+                ),
+                "timestamp": timestamp,
+                "file": None,
+                "line": None,
+                "evidence": None,
+            })
         elif event_type == "filesystem":
             findings.append({
                 "id": f"runtime-{index}",

@@ -73,6 +73,7 @@ class ScanManager:
             findings = result.get("findings", [])
             runtime_findings = result.get("runtime_findings", [])
             summary = result.get("summary", {})
+            sandbox_ran = result.get("sandbox_ran", False)
 
             self._store.update(
                 scan_id,
@@ -80,7 +81,7 @@ class ScanManager:
                 static_findings=findings,
                 runtime_findings=runtime_findings,
                 narrative=result.get("narrative", ""),
-                verdict=self._build_verdict(findings + runtime_findings),
+                verdict=self._build_verdict(findings + runtime_findings, sandbox_ran=sandbox_ran),
                 summary=summary,
                 finished_at=self._utc_now(),
             )
@@ -93,7 +94,7 @@ class ScanManager:
                 finished_at=self._utc_now(),
             )
 
-    def _build_verdict(self, findings: list[dict]) -> dict:
+    def _build_verdict(self, findings: list[dict], sandbox_ran: bool = False) -> dict:
         """Build verdict from findings."""
         severity_weights = {
             "CRITICAL": 30,
@@ -125,11 +126,23 @@ class ScanManager:
             level = "SAFE"
             summary = "Static analysis found no high or critical security issues."
 
+        # Confidence reflects how much signal backs this verdict: static
+        # analysis alone is informative but partial; static + a dynamic
+        # sandbox run that actually executed gives a fuller picture.
+        base_confidence = 0.55 if not sandbox_ran else 0.85
+        if not findings:
+            # No findings + no dynamic run = genuinely low signal either way
+            confidence = 0.5 if not sandbox_ran else base_confidence
+        else:
+            confidence = min(1.0, base_confidence + 0.05 * min(len(findings), 3))
+
         return {
             "level": level,
             "score": score,
+            "confidence": round(confidence, 2),
             "triggered_rules": triggered_rules,
             "summary": summary,
+            "dynamic_analysis_ran": sandbox_ran,
         }
 
     @staticmethod

@@ -21,6 +21,7 @@ def run_security_scan(repo_url: str, branch: str = "main", scan_id: str = "") ->
     # 2. Runtime analysis (actually run the repo inside the disposable sandbox)
     sandbox_result = run_in_sandbox(repo_url=repo_url, scan_id=scan_id or repo_url)
     raw_events = sandbox_result.get("events", [])
+    sandbox_ran = sandbox_result.get("sandbox_ran", False)
     runtime_findings = build_runtime_findings(raw_events)
 
     # 3. Bob agent-mode synthesis — turns raw events into a plain-language
@@ -39,6 +40,7 @@ def run_security_scan(repo_url: str, branch: str = "main", scan_id: str = "") ->
         "runtime_findings": runtime_findings,
         "narrative": narrative,
         "summary": _build_summary(raw_static_findings, runtime_findings),
+        "sandbox_ran": sandbox_ran,
     }
 
 
