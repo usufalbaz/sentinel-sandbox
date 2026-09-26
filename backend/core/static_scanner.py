@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-import json
+import io
+import re
 import shutil
-import subprocess
+import tarfile
 import tempfile
 from pathlib import Path
+
+import httpx
 
 from agent.rule_engine import SecurityRuleEngine
 
@@ -20,41 +23,64 @@ SKIP_DIRS = {
     "build",
 }
 
+_GITHUB_URL_RE = re.compile(
+    r"github\.com[:/]+(?P<owner>[^/\s]+)/(?P<repo>[^/\s#]+?)(?:\.git)?/?$"
+)
+
+
+def _parse_github_repo(repo_url: str) -> tuple[str, str]:
+    match = _GITHUB_URL_RE.search(repo_url.strip())
+    if not match:
+        raise ValueError(f"Unsupported repository URL: {repo_url}")
+    return match.group("owner"), match.group("repo")
+
+
+def _download_repo(repo_url: str, branch: str, dest_dir: Path) -> Path:
+    """
+    Download a public GitHub repository's source as a tarball and extract
+    it into dest_dir. This avoids depending on a local `git` binary, which
+    isn't guaranteed to be present in every deployment environment.
+    """
+    owner, repo = _parse_github_repo(repo_url)
+    tarball_url = (
+        f"https://codeload.github.com/{owner}/{repo}/tar.gz/refs/heads/{branch}"
+    )
+
+    with httpx.Client(timeout=60, follow_redirects=True) as client:
+        response = client.get(tarball_url)
+
+    if response.status_code != 200:
+        raise RuntimeError(
+            f"Repository download failed ({response.status_code}) for "
+            f"{repo_url}@{branch}. Check that the repo is public and the "
+            f"branch exists."
+        )
+
+    with tarfile.open(fileobj=io.BytesIO(response.content), mode="r:gz") as tar:
+        # filter="data" rejects unsafe members (e.g. path traversal, device
+        # files) - important since we're extracting a remote, user-supplied
+        # archive.
+        tar.extractall(dest_dir, filter="data")
+
+    # GitHub tarballs wrap everything in one top-level dir, e.g. "repo-branch/"
+    extracted = [p for p in dest_dir.iterdir() if p.is_dir()]
+    if not extracted:
+        raise RuntimeError("Downloaded archive was empty")
+    return extracted[0]
+
 
 def scan_repository(repo_url: str, branch: str = "main") -> dict:
     """
-    Clone a repository without executing its project code, then run
-    the existing SecurityRuleEngine against source files and package.json.
+    Download a repository's source without executing its project code, then
+    run the existing SecurityRuleEngine against source files and
+    package.json.
     """
 
     engine = SecurityRuleEngine()
     temp_dir = Path(tempfile.mkdtemp(prefix="sentinel-scan-"))
 
     try:
-        clone_cmd = [
-            "git",
-            "clone",
-            "--depth",
-            "1",
-            "--branch",
-            branch,
-            repo_url,
-            str(temp_dir / "repo"),
-        ]
-
-        result = subprocess.run(
-            clone_cmd,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-
-        if result.returncode != 0:
-            raise RuntimeError(
-                f"Repository clone failed: {result.stderr.strip()}"
-            )
-
-        repo_dir = temp_dir / "repo"
+        repo_dir = _download_repo(repo_url, branch, temp_dir)
 
         findings = []
 

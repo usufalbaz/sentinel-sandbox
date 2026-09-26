@@ -7,7 +7,10 @@ app = FastAPI(title="Sentinel Sandbox API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://sentinel-sandbox-kappa.vercel.app",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
