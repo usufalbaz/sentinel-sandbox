@@ -69,15 +69,18 @@ class ScanManager:
         branch = scan.get("branch", "main")
 
         try:
-            result = run_security_scan(repo_url, branch)
+            result = run_security_scan(repo_url, branch, scan_id=scan_id)
             findings = result.get("findings", [])
+            runtime_findings = result.get("runtime_findings", [])
             summary = result.get("summary", {})
 
             self._store.update(
                 scan_id,
                 status="COMPLETED",
                 static_findings=findings,
-                verdict=self._build_verdict(findings),
+                runtime_findings=runtime_findings,
+                narrative=result.get("narrative", ""),
+                verdict=self._build_verdict(findings + runtime_findings),
                 summary=summary,
                 finished_at=self._utc_now(),
             )
