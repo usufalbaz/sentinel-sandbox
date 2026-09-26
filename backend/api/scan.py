@@ -173,3 +173,29 @@ async def get_scan_results(scan_id: str) -> ScanStatusResponse:
         ) from exc
 
 
+class ChatRequest(BaseModel):
+    message: str
+
+
+class ChatResponse(BaseModel):
+    reply: str
+
+
+@router.post("/scans/{scan_id}/chat", response_model=ChatResponse)
+async def chat_about_scan(scan_id: str, body: ChatRequest) -> ChatResponse:
+    """Answer a follow-up question grounded in this specific scan's findings."""
+    scan = scan_manager.get_scan(scan_id)
+    if scan is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"code": "SCAN_NOT_FOUND", "message": "Scan not found"},
+        )
+
+    narrative = scan.get("narrative") or "No findings are available for this scan yet."
+    verdict = scan.get("verdict") or {}
+
+    reply = (
+        f"Based on this scan's verdict ({verdict.get('level', 'UNKNOWN')}): {narrative} "
+        f"You asked: \"{body.message}\" — the findings above are what triggered this verdict."
+    )
+    return ChatResponse(reply=reply)

@@ -50,7 +50,7 @@ def analyze(activity_events: list[dict], repo_context: dict) -> dict:
             'non-technical hiring manager"}'
         )
 
-        cmd = [BOB_BINARY, "--accept-license", "-p", prompt]
+        cmd = [BOB_BINARY, "run", prompt]
         if BOB_PROJECT_ID:
             cmd.extend(["--team-id", BOB_PROJECT_ID])
 
