@@ -84,18 +84,22 @@ A dangerous and repeatable attack vector currently targets software engineers gl
 ```
 sentinel-sandbox/
 ├── backend/
-│   ├── api/          # REST API endpoints
-│   ├── agent/        # Bob 2.0 integration + rule engine
-│   ├── sandbox/      # Docker runner + activity monitor
-│   ├── main.py       # FastAPI application entrypoint
+│   ├── agent/            # Bob 2.0 integration & security rule engine
+│   ├── api/              # REST API endpoints & scan routes
+│   ├── app/scanner/      # Scanner runner orchestration
+│   ├── core/             # Static analyzer, security adapter & in-memory store
+│   ├── sandbox/          # Docker runner, monitor & isolation configuration
+│   ├── services/         # Scan lifecycle manager
+│   ├── tests/            # Automated test suites & vulnerable fixtures
+│   ├── main.py           # FastAPI application entrypoint
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── app/          # Next.js App Router (layout, page)
+│   │   ├── app/          # Next.js App Router (layout, page, styles)
 │   │   ├── components/   # ScanForm, VerdictPanel, FindingsFeed, FollowUpChat
-│   │   └── lib/          # types.ts, api.ts
+│   │   └── lib/          # API client & TypeScript interfaces
 │   └── package.json
-├── ibm-bob-evidence/     # Task session verification screenshots
+├── ibm-bob-evidence/     # Official Bob 2.0 task session verification screenshots
 ├── LICENSE
 └── README.md
 ```
@@ -104,25 +108,27 @@ sentinel-sandbox/
 
 ## 7. Quick Start
 
-### Backend
+### Backend Setup
 ```bash
 cd backend
-python -m venv .venv && .venv/Scripts/activate   # Windows
+python -m venv .venv
+source .venv/bin/activate        # Linux / macOS
+# or: .venv\Scripts\activate     # Windows
 pip install -r requirements.txt
-cp .env.example .env                              # add BOB_API_KEY + BOB_PROJECT_ID
+cp .env.example .env
 uvicorn main:app --reload
 ```
 
-### Frontend
+### Frontend Setup
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local                 # set NEXT_PUBLIC_API_URL
+cp .env.local.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
-API runs on [http://localhost:8000](http://localhost:8000).
+Dashboard runs on [http://localhost:3000](http://localhost:3000).  
+API backend runs on [http://localhost:8000](http://localhost:8000).
 
 ---
 
