@@ -1,41 +1,28 @@
-// Shared TypeScript types mirroring backend Pydantic models
+export type ScanStatus = "pending" | "running" | "complete" | "error";
 
-export type ScanStatus =
-  | "QUEUED"
-  | "CLONING"
-  | "SCANNING_STATIC"
-  | "RUNNING_SANDBOX"
-  | "COMPLETE"
-  | "ERROR";
-
-export type Severity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-
-export type VerdictLevel = "SAFE" | "SUSPICIOUS" | "DANGEROUS";
+export type Verdict = "safe" | "suspicious" | "dangerous" | "unknown";
 
 export interface Finding {
-  category: string;
-  severity: Severity;
-  detail: string;
-  file?: string;
-  line?: number;
-  evidence?: string;
+  id: string;
+  type: string;
+  severity: "info" | "warn" | "critical";
+  message: string;
+  timestamp: string;
+  process?: string;
 }
 
-export interface Verdict {
-  level: VerdictLevel;
-  score: number;
-  triggered_rules: string[];
-  summary: string;
-}
-
-export interface ScanRecord {
-  scan_id: string;
-  repo_url: string;
-  branch: string;
+export interface ScanResult {
+  id: string;
+  repoUrl: string;
   status: ScanStatus;
-  static_findings: Finding[];
-  runtime_findings: Finding[];
-  verdict?: Verdict;
-  narrative?: string;
-  error?: string;
+  verdict: Verdict;
+  findings: Finding[];
+  summary: string;
+  chain: string;
+  createdAt: string;
+}
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
 }

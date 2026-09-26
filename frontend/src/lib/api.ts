@@ -1,43 +1,32 @@
-import type { ScanRecord } from "./types";
+import type { ScanResult } from "./types";
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
-export async function startScan(
-  repoUrl: string,
-  branch = "main"
-): Promise<{ scan_id: string }> {
-  const res = await fetch(`${API}/api/scan`, {
+export async function startScan(repoUrl: string): Promise<{ id: string }> {
+  const res = await fetch(`${BASE_URL}/scan`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ repo_url: repoUrl, branch }),
+    body: JSON.stringify({ repoUrl }),
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(`startScan failed: ${res.status}`);
   return res.json();
 }
 
-export async function getScan(scanId: string): Promise<ScanRecord> {
-  const res = await fetch(`${API}/api/scan/${scanId}`);
-  if (!res.ok) throw new Error(await res.text());
+export async function getScan(id: string): Promise<ScanResult> {
+  const res = await fetch(`${BASE_URL}/scan/${id}`);
+  if (!res.ok) throw new Error(`getScan failed: ${res.status}`);
   return res.json();
 }
 
-export async function getNarrative(
-  scanId: string
-): Promise<{ narrative: string }> {
-  const res = await fetch(`${API}/api/explain/${scanId}`, { method: "POST" });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-export async function askFollowUp(
-  scanId: string,
-  question: string
-): Promise<{ answer: string }> {
-  const res = await fetch(`${API}/api/explain/${scanId}/followup`, {
+export async function sendChat(
+  id: string,
+  message: string
+): Promise<{ reply: string }> {
+  const res = await fetch(`${BASE_URL}/scan/${id}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ message }),
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(`sendChat failed: ${res.status}`);
   return res.json();
 }

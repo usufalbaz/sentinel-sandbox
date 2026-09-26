@@ -1,3 +1,210 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Brand tokens ─────────────────────────────────────────────── */
+:root {
+  /* Accent */
+  --accent: #0ea5e9;          /* sky-500  */
+  --accent-hover: #0284c7;    /* sky-600  */
+  --accent-dim: #0ea5e91a;    /* sky-500 @ 10% */
+
+  /* Verdict colours */
+  --color-safe: #22c55e;
+  --color-suspicious: #f59e0b;
+  --color-dangerous: #ef4444;
+
+  /* Dark surface palette (default = dark mode) */
+  --bg:         #0a0f1a;      /* page background     */
+  --bg-surface: #111827;      /* card / panel        */
+  --bg-raised:  #1a2236;      /* raised card         */
+  --border:     #1e2d45;      /* subtle border       */
+  --border-mid: #253550;      /* mid border          */
+
+  /* Text */
+  --text-primary:  #f1f5f9;   /* slate-100  */
+  --text-muted:    #94a3b8;   /* slate-400  */
+  --text-faint:    #475569;   /* slate-600  */
+
+  /* Header */
+  --nav-bg: rgba(10,15,26,0.85);
+}
+
+/* Apply dark background globally */
+html {
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+
+/* ── Animations ───────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(0.9); box-shadow: 0 0 0 0  rgba(14,165,233,0.5); }
+  70%  { transform: scale(1);   box-shadow: 0 0 0 10px rgba(14,165,233,0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0  rgba(14,165,233,0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes scan-line {
+  0%   { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* ── Utility animation classes ────────────────────────────────── */
+.animate-fade-up   { animation: fade-up    0.6s ease both; }
+.animate-fade-in   { animation: fade-in    0.5s ease both; }
+.animate-slide-down{ animation: slide-down 0.4s ease both; }
+.animate-blink     { animation: blink      1s step-end infinite; }
+.animate-float     { animation: float      3s ease-in-out infinite; }
+
+/* Stagger helpers */
+.delay-100 { animation-delay:  100ms; }
+.delay-200 { animation-delay:  200ms; }
+.delay-300 { animation-delay:  300ms; }
+.delay-400 { animation-delay:  400ms; }
+.delay-500 { animation-delay:  500ms; }
+.delay-600 { animation-delay:  600ms; }
+.delay-700 { animation-delay:  700ms; }
+.delay-800 { animation-delay:  800ms; }
+
+/* ── Shimmer accent text ──────────────────────────────────────── */
+.text-shimmer {
+  background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 40%, #0ea5e9 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Glow button ──────────────────────────────────────────────── */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 22px rgba(14,165,233,0.45), 0 4px 14px rgba(14,165,233,0.25);
+  transform: translateY(-1px);
+}
+.btn-glow:active { transform: translateY(0); }
+
+/* ── Feature card ─────────────────────────────────────────────── */
+.feature-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  border-color: var(--border-mid);
+}
+
+/* ── Step number pulse ────────────────────────────────────────── */
+.step-number {
+  animation: pulse-ring 2.5s ease-in-out infinite;
+}
+
+/* ── Terminal lines (staggered entrance) ─────────────────────── */
+.terminal-line {
+  opacity: 0;
+  animation: fade-up 0.4s ease forwards;
+}
+
+/* ── Nav icon ghost button ────────────────────────────────────── */
+.nav-icon-btn {
+  width: 2rem; height: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 0.5rem;
+  color: var(--text-muted);
+  transition: color 0.15s, background-color 0.15s;
+}
+.nav-icon-btn:hover {
+  color: var(--text-primary);
+  background-color: rgba(255,255,255,0.07);
+}
+
+/* ── Stat card ────────────────────────────────────────────────── */
+.stat-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: var(--border-mid); }
+
+/* ── Light mode overrides (applied via .light on <html>) ─────── */
+html.light {
+  --accent:       #0284c7;
+  --accent-hover: #0369a1;
+  --accent-dim:   #e0f2fe;
+
+  --bg:         #f1f5f9;   /* cool off-white page bg        */
+  --bg-surface: #ffffff;   /* card / panel surface          */
+  --bg-raised:  #f8fafc;   /* slightly lifted inner surface */
+  --border:     #e2e8f0;
+  --border-mid: #cbd5e1;
+
+  --text-primary: #0f172a;
+  --text-muted:   #334155;
+  --text-faint:   #64748b;
+
+  --nav-bg:   rgba(241,245,249,0.95);
+  --cta-bg:   linear-gradient(135deg,#e0f2fe 0%,#f0f9ff 50%,#e0f2fe 100%);
+  --cta-border: #bae6fd;
+  --footer-bg:  #1e293b;   /* keep footer dark in light mode too */
+  --footer-text:#94a3b8;
+}
+
+/* Dark mode explicit (matches :root defaults) */
+html.dark {
+  --accent:       #0ea5e9;
+  --accent-hover: #0284c7;
+  --accent-dim:   #0ea5e91a;
+
+  --bg:         #0a0f1a;
+  --bg-surface: #111827;
+  --bg-raised:  #1a2236;
+  --border:     #1e2d45;
+  --border-mid: #253550;
+
+  --text-primary: #f1f5f9;
+  --text-muted:   #94a3b8;
+  --text-faint:   #475569;
+
+  --nav-bg:   rgba(10,15,26,0.85);
+  --cta-bg:   linear-gradient(135deg,#0c1a2e 0%,#0f2445 50%,#0c1a2e 100%);
+  --cta-border: #253550;
+  --footer-bg:  #0a0f1a;
+  --footer-text:#475569;
+}
+
+/* Base fallback (dark defaults for :root) */
+:root {
+  --cta-bg:    linear-gradient(135deg,#0c1a2e 0%,#0f2445 50%,#0c1a2e 100%);
+  --cta-border:#253550;
+  --footer-bg: #0a0f1a;
+  --footer-text:#475569;
+}
+

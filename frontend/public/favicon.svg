@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#2563eb"/>
+  <!-- Shield shape -->
+  <path d="M16 5L8 8.5V15C8 19.97 11.45 24.6 16 26C20.55 24.6 24 19.97 24 15V8.5L16 5Z" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Check mark -->
+  <path d="M12 15.5L14.5 18L20 12.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
