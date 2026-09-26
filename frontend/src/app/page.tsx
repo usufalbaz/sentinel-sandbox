@@ -32,7 +32,7 @@ function Navbar() {
       <div
         className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-5 h-[56px] rounded-2xl"
         style={{
-          background: "rgba(10,15,26,0.8)",
+          background: "var(--nav-bg)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           border: "1px solid rgba(255,255,255,0.06)",
@@ -51,7 +51,7 @@ function Navbar() {
             <ShieldCheck size={15} className="text-white" />
           </div>
           <div className="flex items-baseline gap-0.5">
-            <span className="font-bold text-[14px] tracking-tight" style={{ color: "#f1f5f9" }}>Sentinel</span>
+            <span className="font-bold text-[14px] tracking-tight" style={{ color: "var(--text-primary)" }}>Sentinel</span>
             <span className="font-bold text-[14px] tracking-tight text-sky-400"> Sandbox</span>
           </div>
         </div>
@@ -67,7 +67,7 @@ function Navbar() {
               key={label}
               href={href}
               className="px-3.5 py-1.5 rounded-xl transition-all duration-200 hover:bg-white/5"
-              style={{ color: "#94a3b8" }}
+              style={{ color: "var(--text-muted)" }}
             >
               {label}
             </a>
@@ -123,7 +123,7 @@ function Hero() {
           </div>
 
           <h1 className="animate-rise delay-100 text-5xl md:text-6xl font-extrabold leading-[1.1] tracking-tight"
-            style={{ color: "#f1f5f9" }}>
+            style={{ color: "var(--text-primary)" }}>
             Analyze any repo.
             <br />
             <span
@@ -140,7 +140,7 @@ function Hero() {
             </span>
           </h1>
 
-          <p className="animate-rise delay-200 text-lg max-w-lg leading-relaxed" style={{ color: "#94a3b8" }}>
+          <p className="animate-rise delay-200 text-lg max-w-lg leading-relaxed" style={{ color: "var(--text-muted)" }}>
             Sentinel Sandbox runs untrusted install scripts inside a disposable VM,
             monitors every system call, and delivers a plain-language safety verdict —
             powered by IBM Bob.
@@ -157,7 +157,7 @@ function Hero() {
             <a
               href="#how-it-works"
               className="inline-flex items-center gap-2 text-sm font-semibold px-7 py-3.5 rounded-xl transition-all hover:bg-white/5"
-              style={{ border: "1px solid rgba(255,255,255,0.18)", color: "#94a3b8" }}
+              style={{ border: "1px solid rgba(255,255,255,0.18)", color: "var(--text-muted)" }}
             >
               See how it works ↓
             </a>
@@ -171,7 +171,7 @@ function Hero() {
               { icon: ShieldCheck, label: "AI-powered verdict"   },
               { icon: Cpu,         label: "IBM Bob engine"       },
             ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "#64748b" }}>
+              <div key={label} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--text-faint)" }}>
                 <Icon size={12} className="text-sky-400" />
                 {label}
               </div>
@@ -231,7 +231,7 @@ function StatsStrip() {
   ];
 
   return (
-    <div style={{ background: "#111827", borderTop: "1px solid #1e2d45", borderBottom: "1px solid #1e2d45" }}>
+    <div style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((s, i) => (
@@ -240,12 +240,12 @@ function StatsStrip() {
               className="text-center animate-rise p-5 rounded-2xl"
               style={{
                 animationDelay: `${i * 100}ms`,
-                background: "#1a2236",
-                border: "1px solid #1e2d45",
+                background: "var(--bg-raised)",
+                border: "1px solid var(--border)",
               }}
             >
               <p className="text-4xl font-extrabold tracking-tight" style={{ color: s.color }}>{s.value}</p>
-              <p className="mt-1.5 text-xs leading-snug" style={{ color: "#475569" }}>{s.label}</p>
+              <p className="mt-1.5 text-xs leading-snug" style={{ color: "var(--text-faint)" }}>{s.label}</p>
             </div>
           ))}
         </div>
@@ -286,8 +286,8 @@ function HowItWorks() {
         >
           <Activity size={11} /> Process
         </span>
-        <h2 className="text-4xl font-extrabold" style={{ color: "#f1f5f9" }}>How It Works</h2>
-        <p className="mt-3 text-sm max-w-md mx-auto" style={{ color: "#94a3b8" }}>
+        <h2 className="text-4xl font-extrabold" style={{ color: "var(--text-primary)" }}>How It Works</h2>
+        <p className="mt-3 text-sm max-w-md mx-auto" style={{ color: "var(--text-muted)" }}>
           Three steps from URL to actionable security verdict.
         </p>
       </div>
@@ -303,8 +303,8 @@ function HowItWorks() {
             className="relative flex flex-col gap-5 p-6 rounded-2xl animate-rise feature-card"
             style={{
               animationDelay: `${i * 150}ms`,
-              background: "#111827",
-              border: `1px solid #1e2d45`,
+              background: "var(--bg-surface)",
+              border: `1px solid var(--border)`,
             }}
           >
             {/* Top accent line */}
@@ -319,8 +319,8 @@ function HowItWorks() {
               </span>
               <Icon className="w-5 h-5" style={{ color: accent }} />
             </div>
-            <h3 className="text-base font-bold" style={{ color: "#f1f5f9" }}>{title}</h3>
-            <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>{description}</p>
+            <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>{title}</h3>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{description}</p>
           </div>
         ))}
       </div>
@@ -340,7 +340,7 @@ function FeaturesGrid() {
   ];
 
   return (
-    <section id="features" style={{ background: "#111827", borderTop: "1px solid #1e2d45" }}>
+    <section id="features" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)" }}>
       <div className="max-w-6xl mx-auto px-6 py-24">
         <div className="text-center mb-16">
           <span
@@ -349,7 +349,7 @@ function FeaturesGrid() {
           >
             <Zap size={11} /> Features
           </span>
-          <h2 className="text-4xl font-extrabold" style={{ color: "#f1f5f9" }}>
+          <h2 className="text-4xl font-extrabold" style={{ color: "var(--text-primary)" }}>
             Everything you need to ship safely
           </h2>
         </div>
@@ -360,8 +360,8 @@ function FeaturesGrid() {
               key={title}
               className="feature-card relative rounded-2xl p-6 animate-rise overflow-hidden group"
               style={{
-                background: "#1a2236",
-                border: "1px solid #1e2d45",
+                background: "var(--bg-raised)",
+                border: "1px solid var(--border)",
                 animationDelay: `${i * 80}ms`,
               }}
             >
@@ -380,8 +380,8 @@ function FeaturesGrid() {
               >
                 <Icon className="w-5 h-5" style={{ color: accent }} />
               </div>
-              <h3 className="font-bold mb-2" style={{ color: "#f1f5f9" }}>{title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>{description}</p>
+              <h3 className="font-bold mb-2" style={{ color: "var(--text-primary)" }}>{title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{description}</p>
             </div>
           ))}
         </div>
@@ -466,7 +466,7 @@ function CTABanner() {
 // ── Footer ────────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ background: "#111827", borderTop: "1px solid #1e2d45" }}>
+    <footer style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)" }}>
       <div className="max-w-6xl mx-auto px-6 py-14">
         <div className="flex flex-col md:flex-row justify-between gap-10">
           {/* Brand */}
@@ -478,13 +478,13 @@ function Footer() {
               >
                 <ShieldCheck size={16} className="text-white" />
               </div>
-              <span className="font-bold text-base" style={{ color: "#f1f5f9" }}>Sentinel Sandbox</span>
+              <span className="font-bold text-base" style={{ color: "var(--text-primary)" }}>Sentinel Sandbox</span>
             </div>
-            <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
               AI-powered sandbox scanning for package supply-chain security.
               Built for the IBM Bob 2.0 Hackathon.
             </p>
-            <div className="flex items-center gap-2 text-xs" style={{ color: "#475569" }}>
+            <div className="flex items-center gap-2 text-xs" style={{ color: "var(--text-faint)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               All systems operational
             </div>
@@ -493,8 +493,8 @@ function Footer() {
           {/* Links */}
           <div className="flex flex-col sm:flex-row gap-10 text-sm">
             <div className="space-y-3">
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#475569" }}>Product</p>
-              <div className="flex flex-col gap-2.5" style={{ color: "#94a3b8" }}>
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-faint)" }}>Product</p>
+              <div className="flex flex-col gap-2.5" style={{ color: "var(--text-muted)" }}>
                 {[
                   { href: "/dashboard",    label: "Dashboard",    isNext: true  },
                   { href: "#how-it-works", label: "How It Works", isNext: false },
@@ -508,8 +508,8 @@ function Footer() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#475569" }}>Project</p>
-              <div className="flex flex-col gap-2.5" style={{ color: "#94a3b8" }}>
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-faint)" }}>Project</p>
+              <div className="flex flex-col gap-2.5" style={{ color: "var(--text-muted)" }}>
                 <a href="https://github.com/usufalbaz/sentinel-sandbox" target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 transition-colors hover:text-sky-400">
                   <GithubIcon size={13} /> GitHub Repo
@@ -523,7 +523,7 @@ function Footer() {
         {/* Bottom bar */}
         <div
           className="mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
-          style={{ borderTop: "1px solid #1e2d45", color: "#475569" }}
+          style={{ borderTop: "1px solid var(--border)", color: "var(--text-faint)" }}
         >
           <span>© 2025 Sentinel Sandbox. Built at IBM Bob Hackathon.</span>
           <a href="https://github.com/usufalbaz/sentinel-sandbox" target="_blank" rel="noopener noreferrer"
@@ -539,7 +539,7 @@ function Footer() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function Page() {
   return (
-    <div className="landing-dark min-h-screen">
+    <div className="min-h-screen">
       <Navbar />
       <main>
         <Hero />

@@ -217,7 +217,7 @@ html {
   animation: scan-beam 2.5s linear infinite;
 }
 
-/* ── Landing page dark-lock (overrides html.light so landing is always dark) */
+/* ── Landing dark theme ──────────────────────────────────────────── */
 .landing-dark {
   --accent:       #0ea5e9;
   --accent-hover: #0284c7;
@@ -233,14 +233,112 @@ html {
   --text-muted:   #94a3b8;
   --text-faint:   #475569;
 
-  --nav-bg:      rgba(10,15,26,0.85);
-  --cta-bg:      linear-gradient(135deg,#0c1a2e 0%,#0f2445 50%,#0c1a2e 100%);
-  --cta-border:  #253550;
-  --footer-bg:   #0a0f1a;
-  --footer-text: #475569;
+  --nav-bg:         rgba(10,15,26,0.82);
+  --nav-border:     rgba(255,255,255,0.06);
+  --nav-shadow:     0 4px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(14,165,233,0.08);
+  --nav-link-hover: rgba(255,255,255,0.05);
+  --nav-link-color: #94a3b8;
+
+  --hero-h1:    #f1f5f9;
+  --hero-p:     #94a3b8;
+  --hero-btn-ghost-border: rgba(255,255,255,0.18);
+  --hero-btn-ghost-color:  #94a3b8;
+  --hero-btn-ghost-hover:  rgba(255,255,255,0.05);
+
+  --term-bg:        #0d1117;
+  --term-border:    rgba(255,255,255,0.08);
+  --term-bar-bg:    #161b22;
+  --term-bar-border:rgba(255,255,255,0.05);
+  --term-bar-text:  rgba(255,255,255,0.25);
+
+  --stats-bg:       #111827;
+  --stats-border:   #1e2d45;
+  --stats-card-bg:  #1a2236;
+  --stats-card-border: #1e2d45;
+  --stats-label:    #475569;
+
+  --section-bg:     #0a0f1a;
+  --card-bg:        #111827;
+  --card-border:    #1e2d45;
+  --card-bg-alt:    #1a2236;
+  --section-label:  #475569;
+  --heading:        #f1f5f9;
+  --subheading:     #94a3b8;
+
+  --cta-bg:      linear-gradient(135deg, #0a0f1a 0%, #0c1535 40%, #0d1a2e 70%, #0a0f1a 100%);
+  --cta-border:  rgba(14,165,233,0.15);
+  --cta-shadow:  0 0 80px rgba(14,165,233,0.08);
+  --cta-dot-grid-opacity: 1;
+
+  --footer-bg:    #111827;
+  --footer-border:#1e2d45;
+  --footer-text:  #94a3b8;
+  --footer-faint: #475569;
 
   background: #0a0f1a;
   color: #f1f5f9;
+}
+
+/* ── Landing light theme ─────────────────────────────────────────── */
+.landing-light {
+  --accent:       #0284c7;
+  --accent-hover: #0369a1;
+  --accent-dim:   #e0f2fe;
+
+  --bg:         #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-raised:  #f1f5f9;
+  --border:     #e2e8f0;
+  --border-mid: #cbd5e1;
+
+  --text-primary: #0f172a;
+  --text-muted:   #334155;
+  --text-faint:   #64748b;
+
+  --nav-bg:         rgba(255,255,255,0.88);
+  --nav-border:     rgba(0,0,0,0.07);
+  --nav-shadow:     0 4px 24px rgba(0,0,0,0.08), 0 0 0 1px rgba(2,132,199,0.10);
+  --nav-link-hover: rgba(0,0,0,0.04);
+  --nav-link-color: #475569;
+
+  --hero-h1:    #0f172a;
+  --hero-p:     #475569;
+  --hero-btn-ghost-border: rgba(0,0,0,0.15);
+  --hero-btn-ghost-color:  #475569;
+  --hero-btn-ghost-hover:  rgba(0,0,0,0.04);
+
+  --term-bg:        #1e293b;
+  --term-border:    rgba(0,0,0,0.12);
+  --term-bar-bg:    #0f172a;
+  --term-bar-border:rgba(0,0,0,0.12);
+  --term-bar-text:  rgba(255,255,255,0.3);
+
+  --stats-bg:       #f1f5f9;
+  --stats-border:   #e2e8f0;
+  --stats-card-bg:  #ffffff;
+  --stats-card-border: #e2e8f0;
+  --stats-label:    #64748b;
+
+  --section-bg:     #f8fafc;
+  --card-bg:        #ffffff;
+  --card-border:    #e2e8f0;
+  --card-bg-alt:    #f8fafc;
+  --section-label:  #64748b;
+  --heading:        #0f172a;
+  --subheading:     #475569;
+
+  --cta-bg:      linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #f0f9ff 70%, #f8fafc 100%);
+  --cta-border:  rgba(2,132,199,0.2);
+  --cta-shadow:  0 0 80px rgba(2,132,199,0.06);
+  --cta-dot-grid-opacity: 0.5;
+
+  --footer-bg:    #1e293b;
+  --footer-border:#334155;
+  --footer-text:  #94a3b8;
+  --footer-faint: #64748b;
+
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 /* ── Stat card ────────────────────────────────────────────────── */
