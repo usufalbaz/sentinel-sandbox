@@ -73,6 +73,15 @@ class ErrorResponse(BaseModel):
     error: dict[str, str]
 
 
+class ChatRequest(BaseModel):
+    message: str
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    scan_id: str
+
+
 @router.post(
     "/scans",
     response_model=ScanCreateResponse,
@@ -173,29 +182,47 @@ async def get_scan_results(scan_id: str) -> ScanStatusResponse:
         ) from exc
 
 
-class ChatRequest(BaseModel):
-    message: str
-
-
-class ChatResponse(BaseModel):
-    reply: str
-
-
-@router.post("/scans/{scan_id}/chat", response_model=ChatResponse)
+@router.post(
+    "/scans/{scan_id}/chat",
+    response_model=ChatResponse,
+    responses={
+        404: {"model": ErrorResponse, "description": "Scan not found"},
+        500: {"model": ErrorResponse, "description": "Internal server error"},
+    },
+)
 async def chat_about_scan(scan_id: str, body: ChatRequest) -> ChatResponse:
-    """Answer a follow-up question grounded in this specific scan's findings."""
-    scan = scan_manager.get_scan(scan_id)
-    if scan is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail={"code": "SCAN_NOT_FOUND", "message": "Scan not found"},
+    """
+    Answer a follow-up question grounded in this specific scan's findings.
+    Requires the scan to be completed.
+    """
+    try:
+        scan = scan_manager.get_scan(scan_id)
+        
+        if scan is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={"code": "SCAN_NOT_FOUND", "message": f"Scan {scan_id} not found"},
+            )
+
+        # Extract context from scan
+        narrative = scan.get("narrative") or "No findings are available for this scan yet."
+        verdict = scan.get("verdict") or {}
+        verdict_level = verdict.get("level", "UNKNOWN")
+        confidence = verdict.get("confidence", 0)
+
+        # Build context-aware reply
+        reply = (
+            f"Based on scan {scan_id} with verdict {verdict_level} "
+            f"(confidence: {confidence * 100:.0f}%): {narrative}. "
+            f"Your question: \"{body.message}\" — the findings above are what triggered this verdict."
         )
 
-    narrative = scan.get("narrative") or "No findings are available for this scan yet."
-    verdict = scan.get("verdict") or {}
+        return ChatResponse(reply=reply, scan_id=scan_id)
 
-    reply = (
-        f"Based on this scan's verdict ({verdict.get('level', 'UNKNOWN')}): {narrative} "
-        f"You asked: \"{body.message}\" — the findings above are what triggered this verdict."
-    )
-    return ChatResponse(reply=reply)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"code": "INTERNAL_ERROR", "message": "Failed to process chat request"},
+        ) from exc

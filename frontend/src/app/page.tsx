@@ -11,10 +11,12 @@ import {
   Zap,
   Lock,
   Eye,
+  ArrowRight,
+  Star,
+  Cpu,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-// ── GitHub icon (inline SVG — not in this lucide-react version) ───────────────
 function GithubIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -24,70 +26,66 @@ function GithubIcon({ size = 16, className = "" }: { size?: number; className?: 
 }
 
 // ── Navbar ────────────────────────────────────────────────────────────────────
-
 function Navbar() {
   return (
-    /* Outer wrapper: full-width, sticky, transparent edge-to-edge */
-    <div className="sticky top-0 z-50 animate-slide-down px-4 py-3"
-      style={{ background: "var(--bg)" }}>
-      {/* Inner pill — the visible rounded header bar */}
+    <div className="sticky top-0 z-50 animate-slide-down px-4 py-3" style={{ background: "transparent" }}>
       <div
-        className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-5 h-[52px] rounded-2xl"
+        className="max-w-6xl mx-auto flex items-center justify-between gap-6 px-5 h-[56px] rounded-2xl"
         style={{
-          background: "var(--nav-bg)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid var(--border)",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.25)",
+          background: "rgba(10,15,26,0.8)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(255,255,255,0.06)",
+          boxShadow: "0 4px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(14,165,233,0.08)",
         }}
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className="w-7 h-7 rounded-lg bg-sky-500 flex items-center justify-center shadow-md shadow-sky-500/30">
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center"
+            style={{
+              background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
+              boxShadow: "0 0 16px rgba(14,165,233,0.5)",
+            }}
+          >
             <ShieldCheck size={15} className="text-white" />
           </div>
-          <span className="font-bold text-[14px] tracking-tight" style={{ color: "var(--text-primary)" }}>
-            Sentinel Sandbox
-          </span>
+          <div className="flex items-baseline gap-0.5">
+            <span className="font-bold text-[14px] tracking-tight" style={{ color: "#f1f5f9" }}>Sentinel</span>
+            <span className="font-bold text-[14px] tracking-tight text-sky-400"> Sandbox</span>
+          </div>
         </div>
 
-        {/* Centre nav */}
-        <nav className="hidden md:flex items-center gap-0.5 text-sm font-medium" style={{ color: "var(--text-muted)" }}>
+        {/* Centre nav links — always dark-themed */}
+        <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
           {[
-            { href: "#how-it-works", label: "Process"  },
-            { href: "#features",     label: "Features"  },
-            { href: "#cta",          label: "About"     },
+            { href: "#how-it-works", label: "Process" },
+            { href: "#features",     label: "Features" },
+            { href: "#cta",          label: "About" },
           ].map(({ href, label }) => (
             <a
               key={label}
               href={href}
-              className="px-3 py-1.5 rounded-xl transition-colors hover:text-slate-100 hover:bg-white/5"
+              className="px-3.5 py-1.5 rounded-xl transition-all duration-200 hover:bg-white/5"
+              style={{ color: "#94a3b8" }}
             >
               {label}
             </a>
           ))}
         </nav>
 
-        {/* Right actions */}
+        {/* Right */}
         <div className="flex items-center gap-1.5 shrink-0">
-          {/* Theme toggle */}
           <ThemeToggle />
-          {/* GitHub */}
-          <a
-            href="https://github.com/usufalbaz/sentinel-sandbox"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub repository"
-            className="nav-icon-btn"
-          >
+          <a href="https://github.com/usufalbaz/sentinel-sandbox" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="nav-icon-btn">
             <GithubIcon size={16} />
           </a>
-          {/* Dashboard pill */}
           <Link
             href="/dashboard"
-            className="ml-1 inline-flex items-center gap-1 bg-sky-500 hover:bg-sky-600 text-white text-sm font-semibold px-4 py-1.5 rounded-full transition-all shadow-md shadow-sky-500/20"
+            className="ml-1 inline-flex items-center gap-1.5 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all btn-glow"
+            style={{ background: "linear-gradient(135deg,#0ea5e9 0%,#2563eb 100%)" }}
           >
-            Dashboard →
+            Dashboard <ArrowRight size={13} />
           </Link>
         </div>
       </div>
@@ -96,92 +94,127 @@ function Navbar() {
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
-
 function Hero() {
   return (
-    <section className="relative overflow-hidden max-w-6xl mx-auto px-6 py-20 md:py-28 flex flex-col md:flex-row items-center gap-14">
-      {/* Background glows */}
-      <div aria-hidden className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #0ea5e9 0%, transparent 70%)" }} />
-      <div aria-hidden className="absolute -bottom-32 right-0 w-80 h-80 rounded-full blur-3xl opacity-10 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #6366f1 0%, transparent 70%)" }} />
+    <section className="relative overflow-hidden">
+      {/* Dot grid background */}
+      <div className="absolute inset-0 dot-grid opacity-40 pointer-events-none" />
 
-      {/* Left column */}
-      <div className="relative flex-1 space-y-7">
-        {/* Badge */}
-        <div className="animate-fade-up inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full"
-          style={{ background: "var(--accent-dim)", border: "1px solid rgba(14,165,233,0.3)", color: "#38bdf8" }}>
-          <Zap size={12} />
-          Powered by IBM Bob AI
-        </div>
+      {/* Large glow orbs */}
+      <div aria-hidden className="absolute -top-60 -left-60 w-[700px] h-[700px] rounded-full blur-3xl pointer-events-none animate-glow-pulse"
+        style={{ background: "radial-gradient(circle, rgba(14,165,233,0.18) 0%, transparent 70%)" }} />
+      <div aria-hidden className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none animate-glow-pulse"
+        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)", animationDelay: "1.2s" }} />
 
-        <h1 className="animate-fade-up delay-100 text-5xl md:text-6xl font-extrabold leading-tight tracking-tight"
-          style={{ color: "var(--text-primary)" }}>
-          Analyze any repo.
-          <br />
-          <span className="text-shimmer">Trust the result.</span>
-        </h1>
-
-        <p className="animate-fade-up delay-200 text-lg max-w-lg leading-relaxed" style={{ color: "var(--text-muted)" }}>
-          Sentinel Sandbox runs untrusted package install scripts inside a
-          disposable VM, monitors every system call, and delivers a
-          plain-language safety verdict — powered by IBM Bob.
-        </p>
-
-        <div className="animate-fade-up delay-300 flex flex-wrap gap-3">
-          <Link
-            href="/dashboard"
-            className="btn-glow inline-flex items-center gap-2 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-sky-500/30"
-            style={{ background: "var(--accent)" }}
-          >
-            Scan a Repository →
-          </Link>
-          <a
-            href="#how-it-works"
-            className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
-            style={{ border: "1px solid var(--border-mid)", color: "var(--text-muted)" }}
-          >
-            See how it works ↓
-          </a>
-        </div>
-
-        {/* Trust signals */}
-        <div className="animate-fade-up delay-400 flex flex-wrap gap-5 pt-1">
-          {[
-            { icon: Lock,        label: "Fully isolated VM"       },
-            { icon: Eye,         label: "Real-time syscall capture" },
-            { icon: ShieldCheck, label: "AI-powered verdict"       },
-          ].map(({ icon: Icon, label }) => (
-            <div key={label} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "var(--text-faint)" }}>
-              <Icon size={13} style={{ color: "var(--accent)" }} />
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Right column — terminal */}
-      <div className="animate-fade-up delay-300 relative flex-1 w-full animate-float">
-        <div aria-hidden className="absolute inset-0 rounded-3xl blur-2xl opacity-20 pointer-events-none"
-          style={{ background: "var(--accent)" }} />
-        <div className="relative rounded-2xl p-6 font-mono text-sm leading-7 shadow-2xl"
-          style={{ background: "#0d1117", border: "1px solid var(--border-mid)" }}>
-          {/* macOS dots */}
-          <div className="flex items-center gap-1.5 mb-5">
-            <span className="w-3 h-3 rounded-full bg-red-500/80" />
-            <span className="w-3 h-3 rounded-full bg-yellow-400/80" />
-            <span className="w-3 h-3 rounded-full bg-green-500/80" />
-            <span className="ml-3 text-xs" style={{ color: "var(--text-faint)" }}>sentinel-scan</span>
+      <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-28 md:pt-28 md:pb-36 flex flex-col md:flex-row items-center gap-16">
+        {/* Left */}
+        <div className="relative flex-1 space-y-7">
+          {/* Badge */}
+          <div className="animate-rise inline-flex items-center gap-2 text-xs font-bold px-3.5 py-1.5 rounded-full"
+            style={{
+              background: "linear-gradient(135deg, rgba(14,165,233,0.15) 0%, rgba(99,102,241,0.15) 100%)",
+              border: "1px solid rgba(14,165,233,0.3)",
+              color: "#38bdf8",
+            }}>
+            <Zap size={11} className="text-sky-400" />
+            Powered by IBM Bob AI &nbsp;·&nbsp;
+            <Star size={10} className="text-yellow-400 fill-yellow-400" />
+            <span className="text-yellow-400">Hackathon 2026</span>
           </div>
-          <p className="terminal-line" style={{ animationDelay: "600ms",  color: "var(--text-faint)" }}>$ sentinel scan https://github.com/evil/pkg</p>
-          <p className="terminal-line text-green-400"  style={{ animationDelay: "900ms"  }}>✓ Sandbox created</p>
-          <p className="terminal-line text-green-400"  style={{ animationDelay: "1100ms" }}>✓ npm install captured</p>
-          <p className="terminal-line text-yellow-400" style={{ animationDelay: "1400ms" }}>⚠ Network call → 203.0.113.45:443</p>
-          <p className="terminal-line text-yellow-400" style={{ animationDelay: "1700ms" }}>⚠ File write → /etc/cron.d/backdoor</p>
-          <p className="terminal-line text-red-400 font-semibold" style={{ animationDelay: "2000ms" }}>✗ Verdict: DANGEROUS</p>
-          <p className="terminal-line text-xs mt-2" style={{ animationDelay: "2300ms", color: "var(--text-faint)" }}>
-            Sandbox destroyed. Report ready.<span className="animate-blink ml-0.5">▋</span>
+
+          <h1 className="animate-rise delay-100 text-5xl md:text-6xl font-extrabold leading-[1.1] tracking-tight"
+            style={{ color: "#f1f5f9" }}>
+            Analyze any repo.
+            <br />
+            <span
+              className="animate-gradient-x"
+              style={{
+                background: "linear-gradient(90deg, #38bdf8, #818cf8, #0ea5e9, #34d399)",
+                backgroundSize: "300% 300%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Trust the result.
+            </span>
+          </h1>
+
+          <p className="animate-rise delay-200 text-lg max-w-lg leading-relaxed" style={{ color: "#94a3b8" }}>
+            Sentinel Sandbox runs untrusted install scripts inside a disposable VM,
+            monitors every system call, and delivers a plain-language safety verdict —
+            powered by IBM Bob.
           </p>
+
+          <div className="animate-rise delay-300 flex flex-wrap gap-3">
+            <Link
+              href="/dashboard"
+              className="btn-glow inline-flex items-center gap-2 text-white text-sm font-bold px-7 py-3.5 rounded-xl transition-all"
+              style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)", boxShadow: "0 0 30px rgba(14,165,233,0.4)" }}
+            >
+              Start Scanning <ArrowRight size={16} />
+            </Link>
+            <a
+              href="#how-it-works"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-7 py-3.5 rounded-xl transition-all hover:bg-white/5"
+              style={{ border: "1px solid rgba(255,255,255,0.18)", color: "#94a3b8" }}
+            >
+              See how it works ↓
+            </a>
+          </div>
+
+          {/* Trust badges */}
+          <div className="animate-rise delay-400 flex flex-wrap gap-4 pt-1">
+            {[
+              { icon: Lock,        label: "Isolated VM"         },
+              { icon: Eye,         label: "Real-time monitoring" },
+              { icon: ShieldCheck, label: "AI-powered verdict"   },
+              { icon: Cpu,         label: "IBM Bob engine"       },
+            ].map(({ icon: Icon, label }) => (
+              <div key={label} className="flex items-center gap-1.5 text-xs font-medium" style={{ color: "#64748b" }}>
+                <Icon size={12} className="text-sky-400" />
+                {label}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right — terminal */}
+        <div className="animate-rise delay-200 relative flex-1 w-full max-w-lg animate-float">
+          {/* Glow behind terminal */}
+          <div aria-hidden className="absolute inset-0 rounded-3xl blur-3xl opacity-30 pointer-events-none"
+            style={{ background: "linear-gradient(135deg,#0ea5e9,#6366f1)", transform: "scale(0.9) translateY(20px)" }} />
+
+          {/* Terminal window */}
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl"
+            style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.08)" }}>
+            {/* Scan line overlay */}
+            <div className="scan-overlay" />
+
+            {/* Titlebar */}
+            <div className="flex items-center gap-2 px-5 py-3.5" style={{ background: "#161b22", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              <span className="w-3 h-3 rounded-full bg-red-500/70" />
+              <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
+              <span className="w-3 h-3 rounded-full bg-green-500/70" />
+              <span className="flex-1 text-center text-xs font-mono" style={{ color: "rgba(255,255,255,0.25)" }}>
+                sentinel-sandbox — bash
+              </span>
+            </div>
+
+            {/* Terminal content */}
+            <div className="p-6 font-mono text-sm leading-7">
+              <p className="terminal-line" style={{ animationDelay: "600ms",  color: "rgba(148,163,184,0.7)" }}>$ sentinel scan https://github.com/evil/pkg</p>
+              <p className="terminal-line" style={{ animationDelay: "900ms",  color: "#4ade80" }}>✓ Sandbox VM created</p>
+              <p className="terminal-line" style={{ animationDelay: "1100ms", color: "#4ade80" }}>✓ npm install captured</p>
+              <p className="terminal-line" style={{ animationDelay: "1350ms", color: "#4ade80" }}>✓ Static analysis complete</p>
+              <p className="terminal-line" style={{ animationDelay: "1600ms", color: "#fbbf24" }}>⚠ Network call → 203.0.113.45:443</p>
+              <p className="terminal-line" style={{ animationDelay: "1900ms", color: "#fbbf24" }}>⚠ File write → /etc/cron.d/backdoor</p>
+              <p className="terminal-line font-bold" style={{ animationDelay: "2200ms", color: "#f87171" }}>✗ Verdict: <span style={{ color: "#ef4444" }}>DANGEROUS</span></p>
+              <p className="terminal-line text-xs mt-2" style={{ animationDelay: "2500ms", color: "rgba(148,163,184,0.5)" }}>
+                Sandbox destroyed. Report ready.<span className="animate-blink ml-0.5" style={{ color: "#38bdf8" }}>▋</span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -189,60 +222,105 @@ function Hero() {
 }
 
 // ── Stats strip ───────────────────────────────────────────────────────────────
-
 function StatsStrip() {
   const stats = [
-    { value: "7",      label: "documented real attacks"    },
-    { value: "0",      label: "files exposed per sandbox"  },
-    { value: "100%",   label: "sandbox destroyed after scan" },
-    { value: "<2 min", label: "avg scan time"              },
+    { value: "7",      label: "real attack vectors detected", color: "#f87171" },
+    { value: "0",      label: "files exposed per sandbox",    color: "#4ade80" },
+    { value: "100%",   label: "sandbox isolated & destroyed", color: "#38bdf8" },
+    { value: "<2 min", label: "average scan time",            color: "#a78bfa" },
   ];
 
   return (
-    <div style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
-      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-wrap justify-center gap-12">
-        {stats.map((s, i) => (
-          <div key={s.label} className="text-center animate-fade-up" style={{ animationDelay: `${i * 100}ms` }}>
-            <p className="text-4xl font-extrabold" style={{ color: "var(--accent)" }}>{s.value}</p>
-            <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>{s.label}</p>
-          </div>
-        ))}
+    <div style={{ background: "#111827", borderTop: "1px solid #1e2d45", borderBottom: "1px solid #1e2d45" }}>
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((s, i) => (
+            <div
+              key={s.label}
+              className="text-center animate-rise p-5 rounded-2xl"
+              style={{
+                animationDelay: `${i * 100}ms`,
+                background: "#1a2236",
+                border: "1px solid #1e2d45",
+              }}
+            >
+              <p className="text-4xl font-extrabold tracking-tight" style={{ color: s.color }}>{s.value}</p>
+              <p className="mt-1.5 text-xs leading-snug" style={{ color: "#475569" }}>{s.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
 // ── How It Works ──────────────────────────────────────────────────────────────
-
 function HowItWorks() {
   const steps = [
-    { number: 1, Icon: LinkIcon,  title: "Submit a Repo URL",          description: "Paste any GitHub or npm package URL. No credentials needed." },
-    { number: 2, Icon: Activity,  title: "Bob Monitors the Sandbox",   description: "Every file write, process spawn, and network call is captured in real time." },
-    { number: 3, Icon: FileText,  title: "Read the Report",            description: "Bob synthesizes a plain-language verdict with full attack-chain reasoning." },
+    {
+      number: 1, Icon: LinkIcon,
+      title: "Submit a Repo URL",
+      description: "Paste any GitHub URL and choose a branch. No credentials or local setup needed.",
+      accent: "#0ea5e9",
+    },
+    {
+      number: 2, Icon: Activity,
+      title: "Bob Monitors the Sandbox",
+      description: "Every file write, process spawn, and network call is captured live in an isolated VM.",
+      accent: "#8b5cf6",
+    },
+    {
+      number: 3, Icon: FileText,
+      title: "Read the Report",
+      description: "Bob synthesises a plain-language verdict with full attack-chain reasoning you can act on.",
+      accent: "#22c55e",
+    },
   ];
 
   return (
     <section id="how-it-works" className="max-w-6xl mx-auto px-6 py-24">
-      <div className="text-center mb-16 animate-fade-up">
-        <span className="inline-block text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "var(--accent)" }}>Process</span>
-        <h2 className="text-4xl font-extrabold" style={{ color: "var(--text-primary)" }}>How It Works</h2>
+      <div className="text-center mb-16">
+        <span
+          className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase mb-4 px-3 py-1 rounded-full"
+          style={{ background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.2)", color: "#38bdf8" }}
+        >
+          <Activity size={11} /> Process
+        </span>
+        <h2 className="text-4xl font-extrabold" style={{ color: "#f1f5f9" }}>How It Works</h2>
+        <p className="mt-3 text-sm max-w-md mx-auto" style={{ color: "#94a3b8" }}>
+          Three steps from URL to actionable security verdict.
+        </p>
       </div>
 
-      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div aria-hidden className="hidden md:block absolute top-[18px] left-[16.67%] right-[16.67%] h-px"
-          style={{ background: "linear-gradient(90deg, transparent, var(--border-mid), transparent)" }} />
+      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Connector line */}
+        <div aria-hidden className="hidden md:block absolute top-[22px] left-[22%] right-[22%] h-px"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(14,165,233,0.3), transparent)" }} />
 
-        {steps.map(({ number, Icon, title, description }, i) => (
-          <div key={number} className={`relative flex flex-col items-start gap-5 animate-fade-up delay-${(i + 1) * 200}`}>
+        {steps.map(({ number, Icon, title, description, accent }, i) => (
+          <div
+            key={number}
+            className="relative flex flex-col gap-5 p-6 rounded-2xl animate-rise feature-card"
+            style={{
+              animationDelay: `${i * 150}ms`,
+              background: "#111827",
+              border: `1px solid #1e2d45`,
+            }}
+          >
+            {/* Top accent line */}
+            <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl" style={{ background: accent }} />
+
             <div className="flex items-center gap-3">
-              <span className="step-number w-10 h-10 rounded-full text-white text-sm font-bold flex items-center justify-center shrink-0"
-                style={{ background: "var(--accent)", boxShadow: "0 0 16px rgba(14,165,233,0.4)" }}>
+              <span
+                className="step-number w-10 h-10 rounded-full text-white text-sm font-bold flex items-center justify-center shrink-0"
+                style={{ background: `linear-gradient(135deg, ${accent}, ${accent}aa)`, boxShadow: `0 0 18px ${accent}50` }}
+              >
                 {number}
               </span>
-              <Icon className="w-5 h-5" style={{ color: "var(--accent)" }} />
+              <Icon className="w-5 h-5" style={{ color: accent }} />
             </div>
-            <h3 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>{title}</h3>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{description}</p>
+            <h3 className="text-base font-bold" style={{ color: "#f1f5f9" }}>{title}</h3>
+            <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>{description}</p>
           </div>
         ))}
       </div>
@@ -251,38 +329,59 @@ function HowItWorks() {
 }
 
 // ── Features grid ─────────────────────────────────────────────────────────────
-
 function FeaturesGrid() {
   const features = [
-    { Icon: Shield,       title: "Disposable Sandbox",      description: "Every run gets a fresh VM destroyed the moment the scan ends.",           accent: "#0ea5e9" },
-    { Icon: Activity,     title: "Live Activity Monitor",   description: "Watch system calls stream in real time as the install script executes.",   accent: "#6366f1" },
-    { Icon: GitBranch,    title: "Bob Chain Tracing",       description: "Full attack-chain reconstructed step-by-step by IBM Bob.",                accent: "#8b5cf6" },
-    { Icon: FileText,     title: "Plain-Language Report",   description: "No jargon — Bob explains exactly what the code tried to do.",             accent: "#06b6d4" },
-    { Icon: MessageSquare,title: "Interactive Q&A",         description: "Ask Bob follow-up questions grounded in the specific scan findings.",     accent: "#14b8a6" },
-    { Icon: CheckCircle,  title: "Deterministic Verdict",   description: "Safe, Suspicious, or Dangerous — always a clear, actionable answer.",    accent: "#22c55e" },
+    { Icon: Shield,        title: "Disposable Sandbox",    description: "Every run gets a fresh VM destroyed the moment the scan ends.",                accent: "#0ea5e9" },
+    { Icon: Activity,      title: "Live Activity Monitor", description: "Watch system calls stream in real time as the install script executes.",         accent: "#6366f1" },
+    { Icon: GitBranch,     title: "Bob Chain Tracing",     description: "Full attack-chain reconstructed step-by-step by IBM Bob.",                      accent: "#8b5cf6" },
+    { Icon: FileText,      title: "Plain-Language Report", description: "No jargon — Bob explains exactly what the code tried to do.",                   accent: "#06b6d4" },
+    { Icon: MessageSquare, title: "Interactive Q&A",       description: "Ask Bob follow-up questions grounded in the specific scan findings.",           accent: "#14b8a6" },
+    { Icon: CheckCircle,   title: "Deterministic Verdict", description: "Safe, Suspicious, or Dangerous — always a clear, actionable answer.",           accent: "#22c55e" },
   ];
 
   return (
-    <section id="features" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)" }}>
+    <section id="features" style={{ background: "#111827", borderTop: "1px solid #1e2d45" }}>
       <div className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-16 animate-fade-up">
-          <span className="inline-block text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "var(--accent)" }}>Features</span>
-          <h2 className="text-4xl font-extrabold" style={{ color: "var(--text-primary)" }}>Everything you need to ship safely</h2>
+        <div className="text-center mb-16">
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase mb-4 px-3 py-1 rounded-full"
+            style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)", color: "#818cf8" }}
+          >
+            <Zap size={11} /> Features
+          </span>
+          <h2 className="text-4xl font-extrabold" style={{ color: "#f1f5f9" }}>
+            Everything you need to ship safely
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(({ Icon, title, description, accent }, i) => (
             <div
               key={title}
-              className="feature-card rounded-2xl p-6 animate-fade-up"
-              style={{ background: "var(--bg-raised)", border: "1px solid var(--border)", animationDelay: `${i * 80}ms` }}
+              className="feature-card relative rounded-2xl p-6 animate-rise overflow-hidden group"
+              style={{
+                background: "#1a2236",
+                border: "1px solid #1e2d45",
+                animationDelay: `${i * 80}ms`,
+              }}
             >
-              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-4"
-                style={{ background: `${accent}18` }}>
+              {/* Hover glow */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+                style={{ background: `radial-gradient(circle at 50% 0%, ${accent}12 0%, transparent 70%)` }}
+              />
+              {/* Top accent */}
+              <div className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+
+              <div
+                className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-4"
+                style={{ background: `${accent}18`, border: `1px solid ${accent}25` }}
+              >
                 <Icon className="w-5 h-5" style={{ color: accent }} />
               </div>
-              <h3 className="font-bold mb-2" style={{ color: "var(--text-primary)" }}>{title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{description}</p>
+              <h3 className="font-bold mb-2" style={{ color: "#f1f5f9" }}>{title}</h3>
+              <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>{description}</p>
             </div>
           ))}
         </div>
@@ -292,39 +391,67 @@ function FeaturesGrid() {
 }
 
 // ── CTA Banner ────────────────────────────────────────────────────────────────
-
 function CTABanner() {
   return (
     <section id="cta" className="max-w-6xl mx-auto px-6 py-20">
-      <div className="relative overflow-hidden rounded-3xl p-12 text-center"
-        style={{ background: "linear-gradient(135deg, #0c1a2e 0%, #0f2445 50%, #0c1a2e 100%)", border: "1px solid var(--border-mid)" }}>
-        {/* Glow orbs */}
-        <div aria-hidden className="absolute -top-16 -right-16 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none"
-          style={{ background: "var(--accent)" }} />
-        <div aria-hidden className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full blur-3xl opacity-10 pointer-events-none"
-          style={{ background: "#6366f1" }} />
+      <div
+        className="relative overflow-hidden rounded-3xl p-12 md:p-16 text-center dot-grid"
+        style={{
+          background: "linear-gradient(135deg, #0a0f1a 0%, #0c1535 40%, #0d1a2e 70%, #0a0f1a 100%)",
+          border: "1px solid rgba(14,165,233,0.15)",
+          boxShadow: "0 0 80px rgba(14,165,233,0.08)",
+        }}
+      >
+        {/* Orbs */}
+        <div aria-hidden className="absolute -top-20 -right-20 w-80 h-80 rounded-full blur-3xl pointer-events-none animate-glow-pulse"
+          style={{ background: "radial-gradient(circle, rgba(14,165,233,0.25) 0%, transparent 70%)" }} />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full blur-3xl pointer-events-none animate-glow-pulse"
+          style={{ background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", animationDelay: "1s" }} />
 
-        <div className="relative animate-fade-up">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4" style={{ color: "var(--text-primary)" }}>
-            Ready to scan your next dependency?
+        <div className="relative animate-rise">
+          <div
+            className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1 rounded-full mb-6"
+            style={{ background: "rgba(14,165,233,0.15)", border: "1px solid rgba(14,165,233,0.25)", color: "#38bdf8" }}
+          >
+            <Zap size={11} /> Free &amp; Open Source
+          </div>
+
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-5 leading-tight" style={{ color: "#f1f5f9" }}>
+            Ready to scan your
+            <br />
+            <span
+              className="animate-gradient-x"
+              style={{
+                background: "linear-gradient(90deg, #38bdf8, #818cf8, #34d399, #38bdf8)",
+                backgroundSize: "300% 300%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              next dependency?
+            </span>
           </h2>
-          <p className="mb-8 max-w-lg mx-auto text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-            Paste a GitHub or npm URL and get a full AI-powered security report in under 2 minutes.
+
+          <p className="mb-10 max-w-lg mx-auto text-sm leading-relaxed" style={{ color: "#94a3b8" }}>
+            Paste a GitHub URL and get a full AI-powered security report in under 2 minutes.
+            No account required.
           </p>
+
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/dashboard"
-              className="btn-glow inline-flex items-center gap-2 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-lg"
-              style={{ background: "var(--accent)", boxShadow: "0 0 24px rgba(14,165,233,0.35)" }}
+              className="btn-glow inline-flex items-center gap-2 text-white text-sm font-bold px-8 py-4 rounded-xl transition-all"
+              style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)", boxShadow: "0 0 30px rgba(14,165,233,0.4)" }}
             >
-              Start Scanning →
+              Start Scanning <ArrowRight size={16} />
             </Link>
             <a
               href="https://github.com/usufalbaz/sentinel-sandbox"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
-              style={{ border: "1px solid var(--border-mid)", color: "var(--text-muted)" }}
+              className="inline-flex items-center gap-2 text-sm font-semibold px-8 py-4 rounded-xl transition-all hover:bg-white/5"
+              style={{ border: "1px solid rgba(255,255,255,0.1)", color: "#94a3b8" }}
             >
               <GithubIcon size={16} />
               View on GitHub
@@ -337,32 +464,37 @@ function CTABanner() {
 }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
-
 function Footer() {
   return (
-    <footer style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border)", color: "var(--text-muted)" }}>
+    <footer style={{ background: "#111827", borderTop: "1px solid #1e2d45" }}>
       <div className="max-w-6xl mx-auto px-6 py-14">
         <div className="flex flex-col md:flex-row justify-between gap-10">
-
           {/* Brand */}
-          <div className="space-y-3 max-w-xs">
+          <div className="space-y-4 max-w-xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-sky-500 flex items-center justify-center shadow-lg shadow-sky-500/30">
-                <ShieldCheck size={17} className="text-white" />
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg,#0ea5e9 0%,#2563eb 100%)", boxShadow: "0 0 14px rgba(14,165,233,0.4)" }}
+              >
+                <ShieldCheck size={16} className="text-white" />
               </div>
-              <span className="font-bold text-base" style={{ color: "var(--text-primary)" }}>Sentinel Sandbox</span>
+              <span className="font-bold text-base" style={{ color: "#f1f5f9" }}>Sentinel Sandbox</span>
             </div>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed" style={{ color: "#94a3b8" }}>
               AI-powered sandbox scanning for package supply-chain security.
               Built for the IBM Bob 2.0 Hackathon.
             </p>
+            <div className="flex items-center gap-2 text-xs" style={{ color: "#475569" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              All systems operational
+            </div>
           </div>
 
           {/* Links */}
           <div className="flex flex-col sm:flex-row gap-10 text-sm">
             <div className="space-y-3">
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-primary)" }}>Product</p>
-              <div className="flex flex-col gap-2">
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#475569" }}>Product</p>
+              <div className="flex flex-col gap-2.5" style={{ color: "#94a3b8" }}>
                 {[
                   { href: "/dashboard",    label: "Dashboard",    isNext: true  },
                   { href: "#how-it-works", label: "How It Works", isNext: false },
@@ -376,25 +508,27 @@ function Footer() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-primary)" }}>Project</p>
-              <div className="flex flex-col gap-2">
+              <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "#475569" }}>Project</p>
+              <div className="flex flex-col gap-2.5" style={{ color: "#94a3b8" }}>
                 <a href="https://github.com/usufalbaz/sentinel-sandbox" target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 transition-colors hover:text-sky-400">
-                  <GithubIcon size={14} /> GitHub
+                  <GithubIcon size={13} /> GitHub Repo
                 </a>
-                <span>IBM Bob Hackathon 2025</span>
+                <span>IBM Bob Hackathon 2026</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
-          style={{ borderTop: "1px solid var(--border)", color: "var(--text-faint)" }}>
+        <div
+          className="mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
+          style={{ borderTop: "1px solid #1e2d45", color: "#475569" }}
+        >
           <span>© 2025 Sentinel Sandbox. Built at IBM Bob Hackathon.</span>
           <a href="https://github.com/usufalbaz/sentinel-sandbox" target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1.5 transition-colors hover:text-sky-400">
-            <GithubIcon size={13} /> usufalbaz/sentinel-sandbox
+            <GithubIcon size={12} /> usufalbaz/sentinel-sandbox
           </a>
         </div>
       </div>
@@ -403,10 +537,9 @@ function Footer() {
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
-
 export default function Page() {
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", color: "var(--text-primary)" }}>
+    <div className="landing-dark min-h-screen">
       <Navbar />
       <main>
         <Hero />

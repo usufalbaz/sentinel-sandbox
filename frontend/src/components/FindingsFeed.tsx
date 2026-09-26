@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { Info, AlertTriangle, AlertOctagon, Activity } from "lucide-react";
+import { Info, AlertTriangle, AlertOctagon, Activity, ShieldOff } from "lucide-react";
 import clsx from "clsx";
 import type { Finding, ScanStatus } from "@/lib/types";
 
@@ -10,45 +10,82 @@ interface FindingsFeedProps {
   status: ScanStatus;
 }
 
-function SeverityIcon({ severity }: { severity: Finding["severity"] }) {
-  const cls = "flex-shrink-0 mt-0.5";
-  if (severity === "critical") return <AlertOctagon size={16} className={clsx(cls, "text-red-400")} />;
-  if (severity === "warn")     return <AlertTriangle size={16} className={clsx(cls, "text-amber-400")} />;
-  return <Info size={16} className={clsx(cls, "text-sky-400")} />;
-}
-
-const severityLeft: Record<Finding["severity"], string> = {
-  info:     "border-l-sky-500",
-  warn:     "border-l-amber-400",
-  critical: "border-l-red-500",
+const SEVERITY_CONFIG: Record<Finding["severity"], {
+  icon: React.ReactNode;
+  bar: string;
+  badge: string;
+  badgeText: string;
+}> = {
+  CRITICAL: {
+    icon: <AlertOctagon size={13} />,
+    bar: "bg-red-500",
+    badge: "bg-red-500/15 border-red-500/30",
+    badgeText: "text-red-400",
+  },
+  HIGH: {
+    icon: <AlertTriangle size={13} />,
+    bar: "bg-orange-500",
+    badge: "bg-orange-500/15 border-orange-500/30",
+    badgeText: "text-orange-400",
+  },
+  MEDIUM: {
+    icon: <AlertTriangle size={13} />,
+    bar: "bg-amber-400",
+    badge: "bg-amber-500/15 border-amber-500/30",
+    badgeText: "text-amber-400",
+  },
+  LOW: {
+    icon: <Info size={13} />,
+    bar: "bg-blue-400",
+    badge: "bg-blue-500/15 border-blue-500/30",
+    badgeText: "text-blue-400",
+  },
+  INFO: {
+    icon: <Info size={13} />,
+    bar: "bg-sky-500",
+    badge: "bg-sky-500/15 border-sky-500/30",
+    badgeText: "text-sky-400",
+  },
 };
 
 function FindingRow({ finding }: { finding: Finding }) {
+  const cfg = SEVERITY_CONFIG[finding.severity] ?? SEVERITY_CONFIG.INFO;
   return (
     <div
-      className={clsx("flex items-start gap-3 px-4 py-3 border-l-4", severityLeft[finding.severity])}
+      className="flex items-start gap-3 px-4 py-3 relative group transition-colors"
       style={{ borderBottom: "1px solid var(--border)" }}
     >
-      <SeverityIcon severity={finding.severity} />
+      {/* Left severity bar */}
+      <div className={clsx("absolute left-0 top-0 bottom-0 w-0.5", cfg.bar)} />
+
+      {/* Severity badge */}
+      <span
+        className={clsx("mt-0.5 flex-shrink-0 flex items-center gap-1 text-[11px] font-semibold px-1.5 py-0.5 rounded border font-mono", cfg.badge, cfg.badgeText)}
+      >
+        {cfg.icon}
+        {finding.severity}
+      </span>
+
+      {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
+        {finding.type && (
           <span
-            className="text-xs px-2 py-0.5 rounded font-mono"
-            style={{ background: "var(--bg-raised)", color: "var(--text-muted)" }}
+            className="text-[11px] font-mono px-1.5 py-0.5 rounded mb-1 inline-block"
+            style={{ background: "var(--bg-raised)", color: "var(--text-faint)", border: "1px solid var(--border)" }}
           >
             {finding.type}
           </span>
-          {finding.process && (
-            <span className="text-xs font-mono truncate" style={{ color: "var(--text-faint)" }}>
-              {finding.process}
-            </span>
-          )}
-        </div>
-        <p className="text-sm mt-0.5" style={{ color: "var(--text-primary)" }}>{finding.message}</p>
+        )}
+        <p className="text-sm leading-snug" style={{ color: "var(--text-primary)" }}>
+          {finding.description}
+        </p>
       </div>
-      <span className="text-xs whitespace-nowrap flex-shrink-0" style={{ color: "var(--text-faint)" }}>
-        {new Date(finding.timestamp).toLocaleTimeString()}
-      </span>
+
+      {finding.timestamp && (
+        <span className="text-[11px] whitespace-nowrap flex-shrink-0 mt-1" style={{ color: "var(--text-faint)" }}>
+          {new Date(finding.timestamp).toLocaleTimeString()}
+        </span>
+      )}
     </div>
   );
 }
@@ -61,49 +98,70 @@ export default function FindingsFeed({ findings, status }: FindingsFeedProps) {
     if (el) el.scrollTop = el.scrollHeight;
   }, [findings]);
 
+  const criticalCount = findings.filter((f) => f.severity === "CRITICAL").length;
+  const highCount = findings.filter((f) => f.severity === "HIGH").length;
+
   return (
     <div
-      className="rounded-2xl overflow-hidden shadow-sm"
+      className="rounded-2xl overflow-hidden"
       style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between p-4"
+        className="flex items-center justify-between px-4 py-3"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
-        <div className="flex items-center gap-2">
-          <span className="font-semibold" style={{ color: "var(--text-primary)" }}>Live Findings</span>
-          <span style={{ color: "var(--text-faint)" }}>({findings.length})</span>
+        <div className="flex items-center gap-3">
+          <span className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>
+            Live Findings
+          </span>
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-mono"
+            style={{ background: "var(--bg-raised)", color: "var(--text-faint)", border: "1px solid var(--border)" }}
+          >
+            {findings.length}
+          </span>
+          {criticalCount > 0 && (
+            <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-red-500/15 text-red-400 border border-red-500/30">
+              {criticalCount} critical
+            </span>
+          )}
+          {highCount > 0 && (
+            <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-orange-500/15 text-orange-400 border border-orange-500/30">
+              {highCount} high
+            </span>
+          )}
         </div>
-        {status === "running" && (
+
+        {status === "RUNNING" && (
           <div className="flex items-center gap-1.5">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span className="text-green-400 text-sm">Live</span>
+            <span className="text-emerald-400 text-xs font-medium">Live</span>
           </div>
         )}
       </div>
 
       {/* Scroll container */}
-      <div ref={scrollRef} className="max-h-80 overflow-y-auto">
+      <div ref={scrollRef} className="max-h-72 overflow-y-auto">
         {findings.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-2 py-10" style={{ color: "var(--text-faint)" }}>
-            {status === "running" || status === "pending" ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-10" style={{ color: "var(--text-faint)" }}>
+            {status === "RUNNING" || status === "QUEUED" ? (
               <>
-                <Activity size={20} className="animate-pulse" />
+                <Activity size={20} className="animate-pulse" style={{ color: "var(--accent)" }} />
                 <span className="text-sm">Waiting for findings…</span>
               </>
             ) : (
               <>
-                <Info size={20} />
+                <ShieldOff size={20} />
                 <span className="text-sm">No findings recorded</span>
               </>
             )}
           </div>
         ) : (
-          findings.map((finding) => <FindingRow key={finding.id} finding={finding} />)
+          findings.map((finding, i) => <FindingRow key={finding.id ?? i} finding={finding} />)
         )}
       </div>
     </div>
